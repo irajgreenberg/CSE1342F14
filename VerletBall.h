@@ -4,6 +4,8 @@
 #include <iostream>
 #include "ofMain.h"
 
+// testing git - delete eventually
+
 namespace CSE1342 {
 	
 	class VerletBall {

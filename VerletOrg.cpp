@@ -60,11 +60,11 @@ void VerletOrg::move() {
 }
 
 void VerletOrg::display() {
-	ofSetColor(0);
+	ofSetColor(stickColor);
 	for (int i = 0; i < stickNum; i++) {
 		sticks[i].displayStick();
 	}
-	ofSetColor(0, 0, 255);
+	ofSetColor(ballColor);
 	for (int i = 0; i < stickNum; i++) {
 		sticks[i].displayBalls();
 	}

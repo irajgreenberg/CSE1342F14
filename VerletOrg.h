@@ -21,8 +21,8 @@ namespace CSE1342 {
 			~VerletOrg();
 			VerletOrg& operator=(const VerletOrg& v);
 	
-			virtual void position();
-			virtual void connect();
+			virtual void position() = 0;
+			virtual void connect() = 0;
 			virtual void push();
 			void display();
 			void move();

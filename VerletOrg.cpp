@@ -59,25 +59,6 @@ void VerletOrg::move() {
 	}
 }
 
-void VerletOrg::connect() {
-	for (int i = 0; i < stickNum; i++) {
-		sticks[i] = VerletStick(&balls[i], &balls[i+1], 0.05);
-	}
-	push();
-}
-
-void VerletOrg::position() {
-	for (int i = 0; i < ballNum; i++) {
-		balls[i] = VerletBall(10, ofVec2f(((i + 1) * 100), ((i + 1) * 100)));
-		if (balls[i].pos.x >= ofGetWidth()) {
-			balls[i].pos.x = (ofGetWidth() - 10);
-		}
-		if (balls[i].pos.y >= ofGetHeight()) {
-			balls[i].pos.y = (ofGetHeight() - 10);
-		}
-	}
-}
-
 void VerletOrg::display() {
 	ofSetColor(0);
 	for (int i = 0; i < stickNum; i++) {

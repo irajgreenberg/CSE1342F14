@@ -31,4 +31,5 @@ void SquarePyramid::_init(){
         faces.push_back( Face(&vecs[indices[i].elem0], &vecs[indices[i].elem1], &vecs[indices[i].elem2]) );
     }
     
+    setScale(ofVec3f(50.0, 50.0, 50.0));
 }

@@ -86,5 +86,7 @@ void Dodecahedron::_init() {
 	for (int i = 0; i < indices.size(); i++) {
 		faces.push_back(Face(&vecs[indices[i].elem0], &vecs[indices[i].elem1], &vecs[indices[i].elem2]));
 	}
-
+	
+	setScale(ofVec3f(35.0, 35.0, 35.0));
+	
 }

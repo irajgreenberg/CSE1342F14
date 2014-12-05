@@ -21,28 +21,19 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	c->setScale(ofVec3f(75.0, 75.0, 75.0));
     c->display(Base3D::SOLID);
-	c->displayNormals(.3, ofColor(255, 255, 0));
 	
-	d->setScale(ofVec3f(35.0, 35.0, 35.0));
 	d->display(Base3D::SOLID);
 	
-	t->setScale(ofVec3f(100.0, 100.0, 100.0));
 	t->display(Base3D::SOLID);
 	
-	s->setScale(ofVec3f(50.0, 50.0, 50.0));
 	s->display(Base3D::SOLID);
 	
-	cel->setScale(ofVec3f(65.0, 65.0, 65.0));
 	cel->display(Base3D::SOLID);
 	
-	dia->setScale(ofVec3f(55.0, 55.0, 55.0));
 	dia->display(Base3D::SOLID);
 	
-	st->setScale(ofVec3f(40.0, 40.0, 40.0));
 	st->display(Base3D::SOLID);
-	
 
 }
 

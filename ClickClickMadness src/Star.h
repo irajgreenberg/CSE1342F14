@@ -1,3 +1,5 @@
+#ifndef __ClickClickMadness__Star__
+#define __ClickClickMadness__Star__
 
 #include <stdio.h>
 #include "Base3D.h"
@@ -13,3 +15,5 @@ private:
     void _init();
     
 };
+
+#endif

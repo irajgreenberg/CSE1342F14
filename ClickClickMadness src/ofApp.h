@@ -7,6 +7,7 @@
 #include "SquarePyramid.h"
 #include "Celery.h"
 #include "Diamond.h"
+#include "Star.h"
 #include "Light.h"
 #include <fstream>
 
@@ -27,12 +28,7 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
     
-    Cube* c;
-	Dodecahedron* d;
-	TrianglePyramid* t;
-	SquarePyramid* s;
-	Celery* cel;
-	Diamond* dia;
+    Base3D* c, * d, * t, * s, * dia, * st, * cel;
     Light lt;
 	ifstream input;
 	char f;

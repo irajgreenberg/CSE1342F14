@@ -62,8 +62,12 @@ void Base3D::rotate(float angle, float xAxis, float yAxis, float zAxis) {
 
 
 void Base3D::display(RenderStyle style){
+    ofPushMatrix();
+    ofTranslate(loc.x, loc.y, loc.z);
+    ofScale(scaleX, scaleY, scaleZ);
+    rotate(1.5, 0.5, 0.5, 0.0);
     _sort();
-	ofSetLineWidth(1);
+    ofSetLineWidth(1);
     for(int i=0; i<faces.size(); ++i){
         // solid
         if (style == Base3D::SOLID) {
@@ -78,10 +82,10 @@ void Base3D::display(RenderStyle style){
             int r = 0;
             int g = 0;
             int b = 0;
-			r = col.r*d + 80;
-			g = col.g*d + 80;
-			b = col.b*d + 80;
-			ofSetColor(r, g, b);
+            r = col.r*d + 80;
+            g = col.g*d + 80;
+            b = col.b*d + 80;
+            ofSetColor(r, g, b);
             ofFill();
             ofBeginShape();
             ofVertex(faces.at(i).getV0().x, faces.at(i).getV0().y, faces.at(i).getV0().z);
@@ -89,7 +93,6 @@ void Base3D::display(RenderStyle style){
             ofVertex(faces.at(i).getV2().x, faces.at(i).getV2().y, faces.at(i).getV2().z);
             ofEndShape(true);
         } else if (style == Base3D::WIRE) {
-            
             // wireframe
             ofSetColor(ofColor(255, 0, 0));
             ofNoFill();
@@ -100,9 +103,14 @@ void Base3D::display(RenderStyle style){
             ofEndShape(true);
         }
     }
+    ofPopMatrix();
 }
 
 void Base3D::displayNormals(float m, const ofColor& col){
+    ofPushMatrix();
+    ofTranslate(loc.x, loc.y, loc.z);
+    ofScale(50.0, 50.0, 50.0);
+    rotate(1.5, 0.5, 0.5, 0.0);
     for(int i=0; i<faces.size(); ++i){
         ofSetColor(ofColor(col));
         ofNoFill();
@@ -113,16 +121,12 @@ void Base3D::displayNormals(float m, const ofColor& col){
                  faces.at(i).getCentroid().z+faces.at(i).getNormal().z*m);
         ofEndShape(true);
     }
+    ofPopMatrix();
     
 }
 
-
-
-
-
-
-
-
-
-
-
+void Base3D::setScale(const ofVec3f& newScale) {
+    scaleX = newScale.x;
+    scaleY = newScale.y;
+    scaleZ = newScale.z;
+}

@@ -5,7 +5,10 @@
 #include "Dodecahedron.h"
 #include "TrianglePyramid.h"
 #include "SquarePyramid.h"
+#include "Celery.h"
+#include "Diamond.h"
 #include "Light.h"
+#include <fstream>
 
 class ofApp : public ofBaseApp{
 	
@@ -28,6 +31,10 @@ public:
 	Dodecahedron* d;
 	TrianglePyramid* t;
 	SquarePyramid* s;
+	Celery* cel;
+	Diamond* dia;
     Light lt;
+	ifstream input;
+	char f;
 	
 };

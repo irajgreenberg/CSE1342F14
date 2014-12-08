@@ -25,8 +25,8 @@ ofVec3f Face::getCentroid(){
     return c/3;
 }
 
-    
-    ofVec3f Face::getNormal(){
+
+ofVec3f Face::getNormal(){
     ofVec3f _v0(*v0);
     ofVec3f _v1(*v1);
     ofVec3f _v2(*v2);

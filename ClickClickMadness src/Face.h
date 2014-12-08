@@ -1,3 +1,12 @@
+/*
+ *  Face.h
+ *  ClickClickMadness
+ *
+ *  Created by Brittni Watkins on 12/3/14.
+ *  Copyright 2014 __MyCompanyName__. All rights reserved.
+ *
+ */
+
 //
 //  Face.h
 //  3D_example

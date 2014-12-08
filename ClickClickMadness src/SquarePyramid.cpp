@@ -10,20 +10,20 @@ Base3D(loc, sz, col, lt){
 
 void SquarePyramid::_init(){
     vecs.push_back(ofVec3f(-1, -1, -1));   
-    vecs.push_back(ofVec3f(-1, -1, 1));     
-    vecs.push_back(ofVec3f(1, -1, 1));      
-    vecs.push_back(ofVec3f(1,-1, -1));      
-    vecs.push_back(ofVec3f(0, 1, 0));       
-    
+    vecs.push_back(ofVec3f(-1, -1, 1));		
+    vecs.push_back(ofVec3f(1, -1, 1));		
+	vecs.push_back(ofVec3f(1,-1, -1));		
+    vecs.push_back(ofVec3f(0, 1, 0));		
+	
     
     indices.push_back(Index<int>(1, 4, 2));
     indices.push_back(Index<int>(2, 0, 1));
     indices.push_back(Index<int>(2, 3, 0));
-    indices.push_back(Index<int>(0, 4, 1)); 
-    indices.push_back(Index<int>(3, 2, 4));
-    indices.push_back(Index<int>(0, 3, 4));
-    
-    
+	indices.push_back(Index<int>(0, 4, 1)); 
+	indices.push_back(Index<int>(3, 2, 4));
+	indices.push_back(Index<int>(0, 3, 4));
+	
+	
     
     for (int i=0; i<indices.size(); ++i){
         // to do
@@ -31,5 +31,5 @@ void SquarePyramid::_init(){
         faces.push_back( Face(&vecs[indices[i].elem0], &vecs[indices[i].elem1], &vecs[indices[i].elem2]) );
     }
     
-    setScale(ofVec3f(50.0, 50.0, 50.0));
+	setScale(ofVec3f(50.0, 50.0, 50.0));
 }

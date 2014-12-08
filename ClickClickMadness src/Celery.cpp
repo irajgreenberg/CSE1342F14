@@ -80,14 +80,14 @@ void Celery::_init(){
     indices.push_back(Index<int>(7, 8, 16));
     indices.push_back(Index<int>(6, 7, 15));
     indices.push_back(Index<int>(5, 6, 14));
-    
+	
     
     for (int i=0; i<indices.size(); ++i){
         // to do
         //cout << indices[i].elem0 << ", " << indices[i].elem1 << ", " << indices[i].elem2 << endl;
         faces.push_back( Face(&vecs[indices[i].elem0], &vecs[indices[i].elem1], &vecs[indices[i].elem2]) );
     }
-    
-    setScale(ofVec3f(65.0, 65.0, 65.0));
+	
+	setScale(ofVec3f(65.0, 65.0, 65.0));
 }
 

@@ -45,5 +45,5 @@ void TrianglePyramid::_init(){
         faces.push_back( Face(&vecs[indices[i].elem0], &vecs[indices[i].elem1], &vecs[indices[i].elem2]) );
     }
     
-    setScale(ofVec3f(100.0, 100.0, 100.0));
+	setScale(ofVec3f(100.0, 100.0, 100.0));
 }

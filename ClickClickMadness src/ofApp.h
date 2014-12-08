@@ -1,15 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Cube.h"
-#include "Dodecahedron.h"
-#include "TrianglePyramid.h"
-#include "SquarePyramid.h"
-#include "Celery.h"
-#include "Diamond.h"
-#include "Star.h"
-#include "Light.h"
-#include <fstream>
+#include "ClickClickEngine.h"
 
 class ofApp : public ofBaseApp{
 	
@@ -27,10 +19,7 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
-    
-    Base3D* c, * d, * t, * s, * dia, * st, * cel;
-    Light lt;
-	ifstream input;
-	char f;
+	
+	ClickClickEngine game;
 	
 };

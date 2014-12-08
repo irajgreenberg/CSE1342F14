@@ -16,3 +16,4 @@ Light::Light(const ofVec3f& pos, float intensity, const ofColor& col):
 pos(pos), intensity(intensity), col(col) {
 }
 
+

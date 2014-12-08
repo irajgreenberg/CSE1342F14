@@ -24,7 +24,7 @@ public:
         WIRE,
         SOLID
     };
-    
+	
     
     Base3D();
     Base3D(const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt);
@@ -33,14 +33,14 @@ public:
     void display(RenderStyle style = SOLID);
     void displayNormals(float m, const ofColor& col);
     
-    //protected:
+	//protected:
     std::vector<ofVec3f> vecs;
     std::vector<Face> faces;
     std::vector< Index<int> > indices;
     
     Light lt;
-    
-    void setScale(const ofVec3f& newScale);
+	
+	void setScale(const ofVec3f& newScale);
     
 private:
     ofVec3f loc;
@@ -49,8 +49,8 @@ private:
     
     virtual void _init() = 0;
     void _sort();
-    
-    float scaleX, scaleY, scaleZ;
+	
+	float scaleX, scaleY, scaleZ;
     
     
 };

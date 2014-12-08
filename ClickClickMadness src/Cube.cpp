@@ -45,8 +45,8 @@ void Cube::_init(){
         //cout << indices[i].elem0 << ", " << indices[i].elem1 << ", " << indices[i].elem2 << endl;
         faces.push_back( Face(&vecs[indices[i].elem0], &vecs[indices[i].elem1], &vecs[indices[i].elem2]) );
     }
-    
-    setScale(ofVec3f(75.0, 75.0, 75.0));
+	
+	setScale(ofVec3f(75.0, 75.0, 75.0));
     
 }
 

@@ -7,7 +7,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
+	game.setMousePosition(mouseX, mouseY);
 }
 
 //--------------------------------------------------------------
@@ -37,7 +37,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	game.startGame();
+	game.clickBoxes();
 }
 
 //--------------------------------------------------------------

@@ -1,5 +1,6 @@
 #include "Star.h"
 
+int Star::starCount = 0;
 
 Star::Star(){
 }
@@ -78,4 +79,9 @@ void Star::_init(){
 	
 	setScale(ofVec3f(40.0, 40.0, 40.0));
     
+}
+
+
+char Star::getType() const {
+	return 'a';
 }

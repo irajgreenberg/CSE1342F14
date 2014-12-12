@@ -14,8 +14,11 @@ Base3D::Base3D(){
 }
 
 Base3D::Base3D(const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt):
-loc(loc), sz(sz), col(col), lt(lt) {
-    
+loc(loc), sz(sz), col(col), lt(lt), interact(true) {
+    rotateAngle = ofRandom(0.5, 2);
+	rotateX = ofRandom(-1, 1);
+	rotateY = ofRandom(-1, 1); 
+	rotateZ = ofRandom(-1, 1);
 }
 
 
@@ -62,48 +65,50 @@ void Base3D::rotate(float angle, float xAxis, float yAxis, float zAxis) {
 
 
 void Base3D::display(RenderStyle style){
-	ofPushMatrix();
-    ofTranslate(loc.x, loc.y, loc.z);
-    ofScale(scaleX, scaleY, scaleZ);
-	rotate(1.5, 0.5, 0.5, 0.0);
-    _sort();
-	ofSetLineWidth(1);
-    for(int i=0; i<faces.size(); ++i){
-        // solid
-        if (style == Base3D::SOLID) {
-            
-            // do light calculations
-            ofVec3f A = lt.pos - faces.at(i).getNormal();
-            ofVec3f B = faces.at(i).getNormal();
-            A.normalize();
-            B.normalize();
-            float d = B.dot(A);
-            
-            int r = 0;
-            int g = 0;
-            int b = 0;
-			r = col.r*d + 80;
-			g = col.g*d + 80;
-			b = col.b*d + 80;
-			ofSetColor(r, g, b);
-            ofFill();
-            ofBeginShape();
-            ofVertex(faces.at(i).getV0().x, faces.at(i).getV0().y, faces.at(i).getV0().z);
-            ofVertex(faces.at(i).getV1().x, faces.at(i).getV1().y, faces.at(i).getV1().z);
-            ofVertex(faces.at(i).getV2().x, faces.at(i).getV2().y, faces.at(i).getV2().z);
-            ofEndShape(true);
-        } else if (style == Base3D::WIRE) {
-            // wireframe
-            ofSetColor(ofColor(255, 0, 0));
-            ofNoFill();
-            ofBeginShape();
-            ofVertex(faces.at(i).getV0().x, faces.at(i).getV0().y, faces.at(i).getV0().z);
-            ofVertex(faces.at(i).getV1().x, faces.at(i).getV1().y, faces.at(i).getV1().z);
-            ofVertex(faces.at(i).getV2().x, faces.at(i).getV2().y, faces.at(i).getV2().z);
-            ofEndShape(true);
-        }
-    }
-	ofPopMatrix();
+	if (interact) {
+		ofPushMatrix();
+		ofTranslate(loc.x, loc.y, loc.z);
+		ofScale(scaleX, scaleY, scaleZ);
+		rotate(rotateAngle, rotateX, rotateY, rotateZ);
+		_sort();
+		ofSetLineWidth(1);
+		for(int i=0; i<faces.size(); ++i){
+			// solid
+			if (style == Base3D::SOLID) {
+				
+				// do light calculations
+				ofVec3f A = lt.pos - faces.at(i).getNormal();
+				ofVec3f B = faces.at(i).getNormal();
+				A.normalize();
+				B.normalize();
+				float d = B.dot(A);
+				
+				int r = 0;
+				int g = 0;
+				int b = 0;
+				r = col.r*d + 80;
+				g = col.g*d + 80;
+				b = col.b*d + 80;
+				ofSetColor(r, g, b);
+				ofFill();
+				ofBeginShape();
+				ofVertex(faces.at(i).getV0().x, faces.at(i).getV0().y, faces.at(i).getV0().z);
+				ofVertex(faces.at(i).getV1().x, faces.at(i).getV1().y, faces.at(i).getV1().z);
+				ofVertex(faces.at(i).getV2().x, faces.at(i).getV2().y, faces.at(i).getV2().z);
+				ofEndShape(true);
+			} else if (style == Base3D::WIRE) {
+				// wireframe
+				ofSetColor(ofColor(255, 0, 0));
+				ofNoFill();
+				ofBeginShape();
+				ofVertex(faces.at(i).getV0().x, faces.at(i).getV0().y, faces.at(i).getV0().z);
+				ofVertex(faces.at(i).getV1().x, faces.at(i).getV1().y, faces.at(i).getV1().z);
+				ofVertex(faces.at(i).getV2().x, faces.at(i).getV2().y, faces.at(i).getV2().z);
+				ofEndShape(true);
+			}
+		}
+		ofPopMatrix();
+	}
 }
 
 void Base3D::displayNormals(float m, const ofColor& col){

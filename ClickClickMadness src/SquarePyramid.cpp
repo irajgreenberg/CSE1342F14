@@ -1,5 +1,7 @@
 #include "SquarePyramid.h"
 
+int SquarePyramid::sqrPyrCount = 0;
+
 SquarePyramid::SquarePyramid(){
 }
 
@@ -32,4 +34,8 @@ void SquarePyramid::_init(){
     }
     
 	setScale(ofVec3f(50.0, 50.0, 50.0));
+}
+
+char SquarePyramid::getType() const {
+	return 's';
 }

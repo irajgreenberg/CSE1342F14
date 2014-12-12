@@ -19,10 +19,13 @@ class Dodecahedron: public Base3D {
 	
 private:
 	void _init();
+	char getType() const;
 	
 public:
 	Dodecahedron();
 	Dodecahedron(const ofVec3f& loc, const ofVec3f& size, const ofColor& color, const Light& lt);
+	static int dodecCount;
 };
+
 
 #endif

@@ -8,12 +8,13 @@
 
 #include "Cube.h"
 
+int Cube::cubeCount = 0;
 
 Cube::Cube(){
 }
 
 Cube::Cube (const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt):
-Base3D(loc, sz, col, lt){
+Base3D(loc, sz, col, lt) {
     _init();
 }
 
@@ -48,5 +49,9 @@ void Cube::_init(){
 	
 	setScale(ofVec3f(75.0, 75.0, 75.0));
     
+}
+
+char Cube::getType() const {
+	return 'c';
 }
 

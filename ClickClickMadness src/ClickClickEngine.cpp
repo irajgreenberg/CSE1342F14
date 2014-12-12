@@ -10,27 +10,41 @@
 #include "ClickClickEngine.h"
 
 ClickClickEngine::ClickClickEngine():
-START_SCREEN(0), GAME_SCREEN(1), INST_SCREEN(2), END_SCREEN(3),
-rawPath(__FILE__), path(rawPath, 0, rawPath.length() - 24), filePath(path + "bin/data/input.txt") {
+START_SCREEN(0), GAME_SCREEN(1), INST_SCREEN(2), END_SCREEN(3) {
 	_init();
 }
 
 ClickClickEngine::~ClickClickEngine() {
-	delete c;
-	delete d;
-	delete t;
-	delete s;
-	delete dia;
-	delete st;
-	delete cel;
-	delete tor;
+	for (int j = 0; j < rows; j++) {
+		for (int i = 0; i < columns; i++) {
+			delete shapes[i][j];
+		}
+	}
+	delete startCube;
 }
 
 void ClickClickEngine::_init() {
 	ofSetVerticalSync(true);
     lt = Light(ofVec3f(0, -20, 50), 1.0,  ofColor(255, 255, 255));
 	timeFont.loadFont("verdana.ttf", 30);
+	titleFont.loadFont("orange juice 2.0.ttf",48);
+	instFont.loadFont("orange juice 2.0.ttf",34);
+	gameOverFont.loadFont("youmurderer.ttf", 100);
+	restartFont.loadFont("youmurderer.ttf", 50);
+	mediumFont.loadFont("True Lies.ttf",30);
+	arrow.loadImage("back.png");
+	instShape.loadImage("shapes.png");
+	startCube = new Cube(ofVec3f(ofGetWidth()/2,ofGetHeight()/2), ofVec3f(230, 230, 230), ofColor(249,249,249), lt);
 	screen = START_SCREEN;
+	rows = 4;
+	columns = 6;
+	score = 0;
+	level = 0;
+	shapeType = 'c';
+	readTimes = 0;
+	EASY = true;
+	MEDIUM = false;
+	HARD = false;
 }
 
 void ClickClickEngine::drawScreen() {
@@ -43,83 +57,173 @@ void ClickClickEngine::drawScreen() {
 	} else if (screen == END_SCREEN) {
 		drawEndScreen();
 	}
+	drawCursor();
 }
 
 void ClickClickEngine::drawStartScreen() {
-	ofBackground(255, 0, 0);
+	if(EASY == true) {
+		ofBackground(91,163,255);
+		ofSetHexColor(0x2980b9);
+		ofNoFill();
+		ofRect(233,505,107,53);
+	}
+	if(MEDIUM == true) {
+		ofBackgroundHex(0x2ecc71);
+		ofSetHexColor(0x27ae60);
+		ofNoFill();
+		ofRect(492,505,150,53);
+	}
+	if(HARD == true) {
+		ofBackgroundHex(0xe74c3c);
+		ofSetHexColor(0xc0392b);
+		ofNoFill();
+		ofRect(833,505,109,53);
+	}
+	ofSetColor(240,240,240);
+	titleFont.drawString("Welcome to Click Click Madness!",ofGetWidth()/10,ofGetHeight()/4);
+	timeFont.drawString("Instructions",ofGetWidth()/10,ofGetHeight()/2);
+	timeFont.drawString("Play Now",7.6*ofGetWidth()/10,ofGetHeight()/2);
+	timeFont.drawString("Easy",2*ofGetWidth()/10,2.9*ofGetHeight()/4);
+	mediumFont.drawString("Medium",4.2*ofGetWidth()/10,2.9*ofGetHeight()/4);
+	restartFont.drawString("Hard",7*ofGetWidth()/10,2.9*ofGetHeight()/4);
+	timeFont.drawString("Created by: CSE 1342 Fall 2014",2.1*ofGetWidth()/10,3.5*ofGetHeight()/4);
+	startCube->display(Base3D::SOLID);
 }
 
 
 void ClickClickEngine::drawGameScreen() {
 	ofBackground(39, 40, 34);
-	c->display(Base3D::SOLID);
-	
-	d->display(Base3D::SOLID);
-	
-	t->display(Base3D::SOLID);
-	
-	s->display(Base3D::SOLID);
-	
-	cel->display(Base3D::SOLID);
-	
-	dia->display(Base3D::SOLID);
-	
-	st->display(Base3D::SOLID);
-	
-	//tor->display(Base3D::SOLID);
-	
+	for (int j = 0; j < rows; j++) {
+		for (int i = 0; i < columns; i++) {
+			shapes[i][j]->display(Base3D::SOLID);
+		}
+	}
 	displayTime();
-	
+	displayScore();
+	displayInstructions(shapeType);
 	if(timeLeft <= 0) {
 		screen = END_SCREEN;
 	}
 }
 
-void ClickClickEngine::drawInstScreen() {
-	ofBackground(0, 255, 0);
+void ClickClickEngine::displayInstructions(char shape) {
+	std::string doThis = "Click the ";
+	ofSetColor(255);
+	if (shapeType == 'c') {
+		doThis = doThis + "cubes!";
+	} else if (shapeType == 'd') {
+		doThis = doThis + "diamonds!";
+	}  else if (shapeType == 't') {
+		doThis = doThis + "triangle-base pyramids!";
+	}  else if (shapeType == 's') {
+		doThis = doThis + "square-base pyramids!";
+	}  else if (shapeType == 'o') {
+		doThis = doThis + "dodecahedrons!";
+	}  else if (shapeType == 'a') {
+		doThis = doThis + "stars!";
+	}  else if (shapeType == 'e') {
+		doThis = doThis + "celeries!";
+	}
+	timeFont.drawString(doThis, ofGetWidth()/2 - timeFont.stringWidth(doThis)/2, timeFont.stringHeight(doThis) * 1.5);
 }
 
-void ClickClickEngine::drawEndScreen() {
-	ofBackground(0, 0, 255);
+void ClickClickEngine::drawInstScreen() {
+	ofBackgroundHex(0xd35400);
+	ofSetColor(255,255,255,255);
+	arrow.draw(10, 15);
+	instShape.draw(ofGetWidth()/4, 180);
+	ofSetHexColor(0xf9f9f9);
+	instFont.drawString("1. Select a difficulty.",ofGetWidth()/3.5,ofGetHeight()/6);
+	instFont.drawString("2. You have 30 seconds to click all the instances \n              of your shape.",ofGetWidth()/10 - 30,5*ofGetHeight()/6);
+}
+
+void ClickClickEngine::drawEndScreen() {	
+	ofBackground(0);
+	ofSetColor(169, 11, 11);
+	gameOverFont.drawString("GAME OVER!",.6*ofGetWidth()/2,ofGetHeight()/2);
+	restartFont.drawString("Click the mouse to restart",.5*ofGetWidth()/2,1.2*ofGetHeight()/2);
 }
 
 void ClickClickEngine::startGame() {
 	if (screen == START_SCREEN) {
-		readFile();
 		playStart = clock();
 		screen = GAME_SCREEN;
 	}
 }
 
 void ClickClickEngine::readFile() {
-	input.open(filePath.c_str());
-	while (input.is_open() && input.good()) {
-		f = input.get();
-		if (f == '!') {
-			std::cout << "cube" << std::endl;
-		} else if (f == '@') {
-			std::cout << "dodecahedron" << std::endl;	
-		} else if (f == '#') {
-			std::cout << "triangular pyramid" << std::endl;	
-		} else if (f == '$') {
-			std::cout << "square pyramid" << std::endl;	
-		} else if (f == '%') {
-			std::cout << "celery" << std::endl;	
-		} else if (f == '^') {
-			std::cout << "diamond" << std::endl;	
-		} else if (f == '&') {
-			std::cout << "star" << std::endl;	
+	if (readTimes == 0) {
+		rawPath = __FILE__;
+		path = std::string(rawPath, 0, rawPath.length() - 24);
+		filePath = path + "bin/data/";
+		if (EASY && !(MEDIUM) && !(HARD)) {
+			filePath = filePath + "easy.txt";
+		} else if (!(EASY) && MEDIUM && !(HARD)) {
+			filePath = filePath + "medium.txt";
+		} else if (!(EASY) && !(MEDIUM) && HARD) {
+			filePath = filePath + "hard.txt";
 		}
+		input.open(filePath.c_str());
+		if (input.is_open() && input.good()) {
+			for (int j = 0; j < rows; j++) {
+				for (int i = 0; i < columns; i++) {
+					f = input.get();
+					if (f == '!') {
+						symbols[i][j] = f;
+					} else if (f == '@') {
+						symbols[i][j] = f;
+					} else if (f == '#') {
+						symbols[i][j] = f;
+					} else if (f == '$') {
+						symbols[i][j] = f;
+					} else if (f == '%') {
+						symbols[i][j] = f;
+					} else if (f == '^') {
+						symbols[i][j] = f;
+					} else if (f == '&') {
+						symbols[i][j] = f;
+					}
+				}
+			}
+		}
+		input.close();
+		int w = ofGetWidth();
+		int h = ofGetHeight();
+		for (int j = 0; j < rows; j++) {
+			for (int i = 0; i < columns; i++) {
+				if (symbols[i][j] == '!') {
+					shapes[i][j] = new Cube(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+											ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					Cube::cubeCount ++;
+				} else if (symbols[i][j] == '@') {
+					shapes[i][j] = new Dodecahedron(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+													ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					Dodecahedron::dodecCount ++;
+				} else if (symbols[i][j] == '#') {
+					shapes[i][j] = new TrianglePyramid(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+													   ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					TrianglePyramid::triPyrCount ++;
+				} else if (symbols[i][j] == '$') {
+					shapes[i][j] = new SquarePyramid(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+													 ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					SquarePyramid::sqrPyrCount ++; 
+				} else if (symbols[i][j] == '%') {
+					shapes[i][j] = new Celery(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+											  ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					Celery::celeryCount ++;
+				} else if (symbols[i][j] == '^') {
+					shapes[i][j] = new Diamond(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+											   ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					Diamond::diamondCount ++;
+				} else if (symbols[i][j] == '&') {
+					shapes[i][j] = new Star(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
+											ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+					Star::starCount ++;
+				}
+			}
+		}
+		readTimes ++;
 	}
-	input.close();
-	c = new Cube(ofVec3f(ofGetWidth()/4, ofGetHeight()/4, -50), ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
-	d = new Dodecahedron(ofVec3f(3 * ofGetWidth()/4.0, 3 * ofGetHeight()/4.0, -50), ofVec3f(230, 230, 230), ofColor(255, 0, 0), lt);
-	t = new TrianglePyramid(ofVec3f(3 * ofGetWidth()/4.0, ofGetHeight()/4.0, -50), ofVec3f(230, 230, 230), ofColor(255, 0, 0), lt);
-	s = new SquarePyramid(ofVec3f(ofGetWidth()/4.0, 3 * ofGetHeight()/4.0, -50), ofVec3f(230, 230, 230), ofColor(0, 255, 0), lt);
-	cel = new Celery(ofVec3f(ofGetWidth()/2, ofGetHeight()/2, -50), ofVec3f(230, 230, 230), ofColor(0, 255, 255), lt);
-	dia = new Diamond(ofVec3f(ofGetWidth()/4, ofGetHeight()/2, -50), ofVec3f(230, 230, 230), ofColor(255, 255, 0), lt);
-	st = new Star(ofVec3f(3 * ofGetWidth()/4, ofGetHeight()/2, -50), ofVec3f(230, 230, 230), ofColor(255, 0, 255), lt);
-	tor = new Toroid(ofVec3f(ofGetWidth()/2, ofGetHeight()/4, -50), ofVec3f(230, 230, 230), ofColor(255), lt);
 }
 
 void ClickClickEngine::convertTime() {
@@ -128,10 +232,153 @@ void ClickClickEngine::convertTime() {
 	timeLeftString = convert.str();
 }
 
+void ClickClickEngine::convertScore() {
+	stringstream convert;
+	convert << score;
+	scoreString = convert.str();	
+}
+
 void ClickClickEngine::displayTime() {
 	playTime = (clock() - playStart) /(double) CLOCKS_PER_SEC;
-	timeLeft = 31 - playTime;
+	if (EASY && !(MEDIUM) && !(HARD)) {
+		timeLeft = 10 - playTime;
+	} else if (!(EASY) && MEDIUM && !(HARD)) {
+		timeLeft = 15 - playTime;
+	} else if (!(EASY) && !(MEDIUM) && HARD) {
+		timeLeft = 20 - playTime;
+	}
 	convertTime();
 	ofSetColor(255);
 	timeFont.drawString(timeLeftString, timeFont.stringWidth(timeLeftString)/2, timeFont.stringHeight(timeLeftString) * 1.5);
+}
+
+void ClickClickEngine::displayScore() {
+	convertScore();
+	ofSetColor(255);
+	timeFont.drawString(scoreString, timeFont.stringWidth(scoreString)/2 + 5, ofGetHeight()/2 - timeFont.stringHeight(scoreString) * 1.5);
+}
+
+
+void ClickClickEngine::clickingShapes() {
+	if (screen == GAME_SCREEN) {
+		for (int j = 0; j < rows; j++) {
+			for (int i = 0; i < columns; i++) {
+				if (mouseX <= shapes[i][j]->loc.x + 50 && mouseX >= shapes[i][j]->loc.x - 50) {
+					if (mouseY <= shapes[i][j]->loc.y + 50 && mouseY >= shapes[i][j]->loc.y - 50) {
+						if (shapeType == shapes[i][j]->getType() && shapes[i][j]->getInteract()) {
+							shapes[i][j]->setInteract(false);
+							score ++;
+							if (shapes[i][j]->getType() == 'c') {
+								Cube::cubeCount --;
+							} else if (shapes[i][j]->getType() == 'd') {
+								Diamond::diamondCount --;
+							}  else if (shapes[i][j]->getType() == 't') {
+								TrianglePyramid::triPyrCount --;
+							}  else if (shapes[i][j]->getType() == 's') {
+								SquarePyramid::sqrPyrCount --;
+							}  else if (shapes[i][j]->getType() == 'o') {
+								Dodecahedron::dodecCount --;
+							}  else if (shapes[i][j]->getType() == 'a') {
+								Star::starCount --;
+							}  else if (shapes[i][j]->getType() == 'e') {
+								Celery::celeryCount --;
+							}
+						} else if (shapeType != shapes[i][j]->getType() && shapes[i][j]->getInteract()) {
+							score --;
+						}
+					}
+				}
+			}
+		}
+		if (EASY && !(MEDIUM) && !(HARD)) {
+			if (Diamond::diamondCount <= 0) {
+				screen = END_SCREEN;
+			} else if (TrianglePyramid::triPyrCount <= 0) {
+				shapeType = 'd';
+			} else if (Cube::cubeCount <= 0) {
+				shapeType = 't';
+			}
+		} else if (!(EASY) && MEDIUM && !(HARD)) {
+			if (Star::starCount <= 0) {
+				screen = END_SCREEN;
+			} else if (Dodecahedron::dodecCount <= 0) {
+				shapeType = 'a';
+			} else if (Diamond::diamondCount <= 0) {
+				shapeType = 'o';
+			} else if (TrianglePyramid::triPyrCount <= 0) {
+				shapeType = 'd';
+			} else if (Cube::cubeCount <= 0) {
+				shapeType = 't';
+			}
+		} else if (!(EASY) && !(MEDIUM) && HARD) {
+			if (SquarePyramid::sqrPyrCount <= 0) {
+				screen = END_SCREEN;
+			} else if (Celery::celeryCount <= 0) {
+				shapeType = 's';
+			} else if (Star::starCount <= 0) {
+				shapeType = 'e';
+			} else if (Dodecahedron::dodecCount <= 0) {
+				shapeType = 'a';
+			} else if (Diamond::diamondCount <= 0) {
+				shapeType = 'o';
+			} else if (TrianglePyramid::triPyrCount <= 0) {
+				shapeType = 'd';
+			} else if (Cube::cubeCount <= 0) {
+				shapeType = 't';
+			}
+		}
+	}
+}
+
+void ClickClickEngine::clickBoxes() {
+	if (screen == END_SCREEN) {
+		restartGame();
+	} else if(screen == GAME_SCREEN) {
+		clickingShapes();
+	} else if(screen == INST_SCREEN) {
+		if(mouseX >= 10 && mouseX <= 145 && mouseY >= 15 && mouseY <= 68) {
+			screen = START_SCREEN;
+		}
+	} else if(screen == START_SCREEN) {
+		if (mouseX >= 233 && mouseX <= 341 && mouseY >= 505 && mouseY <= 558) {
+			EASY = true;
+			MEDIUM = false;
+			HARD = false;
+		} else if (mouseX >= 492 && mouseX <= 642 && mouseY >= 505 && mouseY < 558) {
+			EASY = false;
+			MEDIUM = true;
+			HARD = false;
+		} else if (mouseX >= 833 && mouseX <= 942 && mouseY >= 505 && mouseY <= 558) {
+			EASY = false;
+			MEDIUM = false;
+			HARD = true;
+		} else if (mouseX >= 112 && mouseX <= 362 && mouseY >= 336 && mouseY <= 389) {
+			screen = INST_SCREEN;
+		} else if ( mouseX >= 906 && mouseX <= 1113 && mouseY >= 336 && mouseY <= 389) {
+			readFile();
+			startGame();
+		}
+	}
+}
+
+void ClickClickEngine::restartGame() {
+	for (int j = 0; j < rows; j++) {
+		for (int i = 0; i < columns; i++) {
+			delete shapes[i][j];
+		}
+	}
+	shapeType = 'c';
+	readTimes = 0;
+	score = 0;
+	EASY = true;
+	MEDIUM = false;
+	HARD = false;
+	screen = START_SCREEN;
+}
+
+void ClickClickEngine::drawCursor() {
+	ofRectMode(OF_RECTMODE_CENTER);
+	ofSetColor(240, 240, 240);
+	ofFill();
+	ofRect(mouseX, mouseY, 5, 5);
 }

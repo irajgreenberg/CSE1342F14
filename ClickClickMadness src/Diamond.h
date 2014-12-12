@@ -18,9 +18,12 @@ class Diamond : public Base3D {
 public:
     Diamond();
     Diamond(const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt);
+	
+	static int diamondCount;
     
     
 private:
+	char getType() const;
     void _init();
     
 };

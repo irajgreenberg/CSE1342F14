@@ -17,10 +17,15 @@ class TrianglePyramid : public Base3D {
 public:
     TrianglePyramid();
     TrianglePyramid (const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt);
+	static int triPyrCount;
     
     
 private:
+	char getType() const;
     void _init();
     
 };
+
+
+
 #endif /* defined(___D_example__TrianglePyramid__) */

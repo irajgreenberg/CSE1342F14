@@ -25,6 +25,7 @@ public:
         SOLID
     };
 	
+	bool interact;
     
     Base3D();
     Base3D(const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt);
@@ -41,9 +42,13 @@ public:
     Light lt;
 	
 	void setScale(const ofVec3f& newScale);
+	
+	void setInteract(bool newInt);
+	bool getInteract() const;
+	ofVec3f loc;
+	virtual char getType() const = 0;
     
-private:
-    ofVec3f loc;
+protected:
     ofVec3f sz;
     ofColor col;
     
@@ -51,8 +56,16 @@ private:
     void _sort();
 	
 	float scaleX, scaleY, scaleZ;
+	float rotateAngle, rotateX, rotateY, rotateZ;
     
     
 };
+
+inline void Base3D::setInteract(bool newInt) {
+	interact = newInt;
+}
+inline bool Base3D::getInteract() const {
+	return interact;
+}
 
 #endif /* defined(___D_example__Base3D__) */

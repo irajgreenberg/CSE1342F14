@@ -17,10 +17,14 @@ class Cube : public Base3D {
 public:
     Cube();
     Cube (const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt);
+	
+	static int cubeCount;
     
     
 private:
+	char getType() const;
     void _init();
     
 };
+
 #endif /* defined(___D_example__Cube__) */

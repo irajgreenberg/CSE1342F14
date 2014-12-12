@@ -9,7 +9,7 @@
 
 #include "Dodecahedron.h"
 
-#include "Dodecahedron.h"
+int Dodecahedron::dodecCount = 0;
 
 Dodecahedron::Dodecahedron():
 Base3D() {
@@ -89,4 +89,8 @@ void Dodecahedron::_init() {
 	
 	setScale(ofVec3f(35.0, 35.0, 35.0));
 	
+}
+
+char Dodecahedron::getType() const {
+	return 'o';
 }

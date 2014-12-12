@@ -8,6 +8,8 @@
 
 #include "TrianglePyramid.h"
 
+int TrianglePyramid::triPyrCount = 0;
+
 
 TrianglePyramid::TrianglePyramid(){
 }
@@ -46,4 +48,8 @@ void TrianglePyramid::_init(){
     }
     
 	setScale(ofVec3f(100.0, 100.0, 100.0));
+}
+
+char TrianglePyramid::getType() const {
+	return 't';
 }

@@ -8,12 +8,13 @@
 
 #include "Diamond.h"
 
+int Diamond::diamondCount = 0;
 
 Diamond::Diamond(){
 }
 
 Diamond::Diamond (const ofVec3f& loc, const ofVec3f& sz, const ofColor& col, const Light& lt):
-Base3D(loc, sz, col, lt){
+Base3D(loc, sz, col, lt) {
     _init();
 }
 
@@ -51,4 +52,8 @@ void Diamond::_init(){
 	
 	setScale(ofVec3f(55.0, 55.0, 55.0));
     
+}
+
+char Diamond::getType() const {
+	return 'd';
 }

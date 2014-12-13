@@ -32,6 +32,7 @@ private:
 	const int GAME_SCREEN;
 	const int END_SCREEN;
 	const int INST_SCREEN;
+	const int WIN_SCREEN;
 
 	int level;
 	
@@ -72,12 +73,15 @@ private:
 	std::string path;
 	std::string filePath;
 	
+	ofColor shapeColor;
+	
 	void _init();
 	
 	void drawStartScreen();
 	void drawGameScreen();
 	void drawInstScreen();
 	void drawEndScreen();
+	void drawWinScreen();
 	void readFile();
 	void convertTime();
 	void displayTime();
@@ -85,6 +89,7 @@ private:
 	void displayScore();
 	void displayInstructions(char shape);
 	void drawCursor();
+	ofColor setShapeColor();
 	
 public:
 	ClickClickEngine();

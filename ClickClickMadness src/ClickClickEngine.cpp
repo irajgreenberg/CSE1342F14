@@ -10,7 +10,7 @@
 #include "ClickClickEngine.h"
 
 ClickClickEngine::ClickClickEngine():
-START_SCREEN(0), GAME_SCREEN(1), INST_SCREEN(2), END_SCREEN(3) {
+START_SCREEN(0), GAME_SCREEN(1), INST_SCREEN(2), END_SCREEN(3), WIN_SCREEN(4) {
 	_init();
 }
 
@@ -56,6 +56,8 @@ void ClickClickEngine::drawScreen() {
 		drawInstScreen();
 	} else if (screen == END_SCREEN) {
 		drawEndScreen();
+	} else if (screen == WIN_SCREEN) {
+		drawWinScreen();
 	}
 	drawCursor();
 }
@@ -141,7 +143,7 @@ void ClickClickEngine::drawEndScreen() {
 	ofBackground(0);
 	ofSetColor(169, 11, 11);
 	gameOverFont.drawString("GAME OVER!",.6*ofGetWidth()/2,ofGetHeight()/2);
-	restartFont.drawString("Click the mouse to restart",.5*ofGetWidth()/2,1.2*ofGetHeight()/2);
+	restartFont.drawString("Press SPACEBAR to restart",.5*ofGetWidth()/2,1.2*ofGetHeight()/2);
 }
 
 void ClickClickEngine::startGame() {
@@ -191,39 +193,67 @@ void ClickClickEngine::readFile() {
 		int h = ofGetHeight();
 		for (int j = 0; j < rows; j++) {
 			for (int i = 0; i < columns; i++) {
+				shapeColor = setShapeColor();
 				if (symbols[i][j] == '!') {
 					shapes[i][j] = new Cube(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-											ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+											ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					Cube::cubeCount ++;
 				} else if (symbols[i][j] == '@') {
 					shapes[i][j] = new Dodecahedron(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-													ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+													ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					Dodecahedron::dodecCount ++;
 				} else if (symbols[i][j] == '#') {
 					shapes[i][j] = new TrianglePyramid(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-													   ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+													   ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					TrianglePyramid::triPyrCount ++;
 				} else if (symbols[i][j] == '$') {
 					shapes[i][j] = new SquarePyramid(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-													 ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+													 ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					SquarePyramid::sqrPyrCount ++; 
 				} else if (symbols[i][j] == '%') {
 					shapes[i][j] = new Celery(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-											  ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+											  ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					Celery::celeryCount ++;
 				} else if (symbols[i][j] == '^') {
 					shapes[i][j] = new Diamond(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-											   ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+											   ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					Diamond::diamondCount ++;
 				} else if (symbols[i][j] == '&') {
 					shapes[i][j] = new Star(ofVec3f(w/6 + (i * w/6) - 60, h/4 + (j * h/4) - 75, -50),
-											ofVec3f(230, 230, 230), ofColor(0, 0, 255), lt);
+											ofVec3f(230, 230, 230), ofColor(shapeColor), lt);
 					Star::starCount ++;
 				}
 			}
 		}
 		readTimes ++;
 	}
+}
+
+ofColor ClickClickEngine::setShapeColor() {
+	int num = ofRandom(100);
+	ofColor tempCol;
+	if (num % 10 == 0) {
+		tempCol = ofColor(166, 226, 45);
+	} else if (num % 10 == 1) {
+		tempCol = ofColor(241, 39, 114);
+	} else if (num % 10 == 2) {
+		tempCol = ofColor(230, 219, 116);
+	} else if (num % 10 == 3) {
+		tempCol = ofColor(80, 196, 239);
+	} else if (num % 10 == 4) {
+		tempCol = ofColor(155, 89, 182);
+	} else if (num % 10 == 5) {
+		tempCol = ofColor(211, 84, 0);
+	} else if (num % 10 == 6) {
+		tempCol = ofColor(236, 240, 241);
+	} else if (num % 10 == 7) {
+		tempCol = ofColor(127, 140, 141);
+	} else if (num % 10 == 8) {
+		tempCol = ofColor(22, 160, 133);
+	} else if (num % 10 == 9) {
+		tempCol = ofColor(169, 39, 38);
+	}
+	return tempCol;
 }
 
 void ClickClickEngine::convertTime() {
@@ -292,7 +322,7 @@ void ClickClickEngine::clickingShapes() {
 		}
 		if (EASY && !(MEDIUM) && !(HARD)) {
 			if (Diamond::diamondCount <= 0) {
-				screen = END_SCREEN;
+				screen = WIN_SCREEN;
 			} else if (TrianglePyramid::triPyrCount <= 0) {
 				shapeType = 'd';
 			} else if (Cube::cubeCount <= 0) {
@@ -300,7 +330,7 @@ void ClickClickEngine::clickingShapes() {
 			}
 		} else if (!(EASY) && MEDIUM && !(HARD)) {
 			if (Star::starCount <= 0) {
-				screen = END_SCREEN;
+				screen = WIN_SCREEN;
 			} else if (Dodecahedron::dodecCount <= 0) {
 				shapeType = 'a';
 			} else if (Diamond::diamondCount <= 0) {
@@ -312,7 +342,7 @@ void ClickClickEngine::clickingShapes() {
 			}
 		} else if (!(EASY) && !(MEDIUM) && HARD) {
 			if (SquarePyramid::sqrPyrCount <= 0) {
-				screen = END_SCREEN;
+				screen = WIN_SCREEN;
 			} else if (Celery::celeryCount <= 0) {
 				shapeType = 's';
 			} else if (Star::starCount <= 0) {
@@ -331,9 +361,7 @@ void ClickClickEngine::clickingShapes() {
 }
 
 void ClickClickEngine::clickBoxes() {
-	if (screen == END_SCREEN) {
-		restartGame();
-	} else if(screen == GAME_SCREEN) {
+	if(screen == GAME_SCREEN) {
 		clickingShapes();
 	} else if(screen == INST_SCREEN) {
 		if(mouseX >= 10 && mouseX <= 145 && mouseY >= 15 && mouseY <= 68) {
@@ -362,18 +390,20 @@ void ClickClickEngine::clickBoxes() {
 }
 
 void ClickClickEngine::restartGame() {
-	for (int j = 0; j < rows; j++) {
-		for (int i = 0; i < columns; i++) {
-			delete shapes[i][j];
+	if (screen == END_SCREEN || screen == WIN_SCREEN) {
+		for (int j = 0; j < rows; j++) {
+			for (int i = 0; i < columns; i++) {
+				delete shapes[i][j];
+			}
 		}
+		shapeType = 'c';
+		readTimes = 0;
+		score = 0;
+		EASY = true;
+		MEDIUM = false;
+		HARD = false;
+		screen = START_SCREEN;
 	}
-	shapeType = 'c';
-	readTimes = 0;
-	score = 0;
-	EASY = true;
-	MEDIUM = false;
-	HARD = false;
-	screen = START_SCREEN;
 }
 
 void ClickClickEngine::drawCursor() {
@@ -381,4 +411,10 @@ void ClickClickEngine::drawCursor() {
 	ofSetColor(240, 240, 240);
 	ofFill();
 	ofRect(mouseX, mouseY, 5, 5);
+}
+
+void ClickClickEngine::drawWinScreen() {
+	ofBackground(39, 40, 34);
+	titleFont.drawString("You Win!", 470,ofGetHeight()/4);
+	startCube->display(Base3D::SOLID);
 }
